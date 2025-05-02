@@ -1,6 +1,5 @@
 export class Ship {
-  constructor(player, length) {
-    this.player = player;
+  constructor(length) {
     this.length = length;
     this.hits = 0;
     this.sunk = false;
@@ -8,5 +7,12 @@ export class Ship {
 
   hit() {
     this.hits++;
+  }
+
+  isSunk() {
+    if (this.hits >= this.length) {
+      return true;
+    }
+    return false;
   }
 }
