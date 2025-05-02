@@ -21,10 +21,16 @@ export default defineConfig([
     rules: { ...prettier.rules, "prettier/prettier": "error" },
   },
   {
-    files: ["webpack.*.js"],
+    files: ["webpack.*.js", "babel.config.js"],
     languageOptions: {
       sourceType: "commonjs",
       globals: globals.node,
+    },
+  },
+  {
+    files: ["src/tests/**/*.{js,mjs,cjs}"],
+    rules: {
+      "no-undef": "off",
     },
   },
 ]);
