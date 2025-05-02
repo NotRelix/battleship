@@ -1,4 +1,4 @@
-import { add } from "./add";
+import { add } from "../modules/add";
 
 describe("Testing", () => {
   test("Add 2 numbers", () => {
