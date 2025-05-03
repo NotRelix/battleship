@@ -2,20 +2,8 @@ import { Ship } from "./ship";
 
 export class Gameboard {
   constructor() {
-    this.board = this.generateBoard();
+    this.board = generateBoard();
     this.ships = [];
-  }
-
-  generateBoard() {
-    const board = [];
-    for (let row = 0; row < 10; row++) {
-      const rowArr = [];
-      for (let col = 0; col < 10; col++) {
-        rowArr.push(null);
-      }
-      board.push(rowArr);
-    }
-    return board;
   }
 
   placeShip(x, y, length, isVertical) {
@@ -32,6 +20,29 @@ export class Gameboard {
         : (this.board[x][y + i] = currentShipIndex);
     }
   }
+
+  receiveAttack(x, y) {
+    if (this.board[x][y] === -1) {
+      return;
+    }
+    if (this.board[x][y] !== null) {
+      const shipIndex = this.board[x][y];
+      this.ships[shipIndex].hit();
+    }
+    this.board[x][y] = -1;
+  }
+}
+
+function generateBoard() {
+  const board = [];
+  for (let row = 0; row < 10; row++) {
+    const rowArr = [];
+    for (let col = 0; col < 10; col++) {
+      rowArr.push(null);
+    }
+    board.push(rowArr);
+  }
+  return board;
 }
 
 function isValidShipPlacement(board, x, y, length, isVertical) {

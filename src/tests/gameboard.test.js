@@ -177,4 +177,90 @@ describe("Gameboard Class", () => {
       [null, 1, 1, 1, null, 3, null, null, null, null],
     ]);
   });
+
+  test("Hit a Ship", () => {
+    gameboard.receiveAttack(1, 0);
+    expect(gameboard.ships[0].hits).toBe(1);
+    expect(gameboard.ships[0].isSunk()).toBe(false);
+  });
+
+  test("Hit a Ship on the Same Spot", () => {
+    gameboard.receiveAttack(1, 0);
+    expect(gameboard.ships[0].hits).toBe(1);
+    expect(gameboard.ships[0].isSunk()).toBe(false);
+  });
+
+  test("Hit the Same Ship on a Different Spot", () => {
+    gameboard.receiveAttack(2, 0);
+    expect(gameboard.ships[0].hits).toBe(2);
+    expect(gameboard.ships[0].isSunk()).toBe(false);
+  });
+
+  test("Hit the Same Ship For the 3rd Time", () => {
+    gameboard.receiveAttack(3, 0);
+    expect(gameboard.ships[0].hits).toBe(3);
+    expect(gameboard.ships[0].isSunk()).toBe(false);
+  });
+
+  test("Hit the Same Ship For the 4th Time", () => {
+    gameboard.receiveAttack(4, 0);
+    expect(gameboard.ships[0].hits).toBe(4);
+    expect(gameboard.ships[0].isSunk()).toBe(false);
+  });
+
+  test("Hit the Same Ship on the Same Spot Again", () => {
+    gameboard.receiveAttack(4, 0);
+    expect(gameboard.ships[0].hits).toBe(4);
+    expect(gameboard.ships[0].isSunk()).toBe(false);
+  });
+
+  test("Hit the Same Ship and Make it Sink", () => {
+    gameboard.receiveAttack(0, 0);
+    expect(gameboard.ships[0].hits).toBe(5);
+    expect(gameboard.ships[0].isSunk()).toBe(true);
+  });
+
+  test("Ensure the Ship Has Sunk", () => {
+    gameboard.receiveAttack(3, 0);
+    expect(gameboard.ships[0].hits).toBe(5);
+    expect(gameboard.ships[0].isSunk()).toBe(true);
+  });
+
+  test("Hit a Different Ship", () => {
+    gameboard.receiveAttack(7, 5);
+    expect(gameboard.ships[3].hits).toBe(1);
+    expect(gameboard.ships[3].isSunk()).toBe(false);
+  });
+
+  test("Completely Miss A Ship", () => {
+    gameboard.receiveAttack(0, 2);
+    expect(gameboard.board).toStrictEqual([
+      [-1, null, -1, null, null, null, null, null, 4, 4],
+      [-1, null, 2, null, null, null, null, null, null, null],
+      [-1, null, 2, null, null, null, null, null, null, null],
+      [-1, null, 2, null, null, null, null, null, null, null],
+      [-1, null, 2, null, null, null, null, null, null, null],
+      [null, null, 2, null, null, null, null, null, null, null],
+      [null, null, null, null, null, 3, null, null, null, null],
+      [null, null, null, null, null, -1, null, null, null, null],
+      [null, null, null, null, null, 3, null, null, null, null],
+      [null, 1, 1, 1, null, 3, null, null, null, null],
+    ]);
+  });
+
+  test("Completely Miss A Ship On the Same Spot", () => {
+    gameboard.receiveAttack(0, 2);
+    expect(gameboard.board).toStrictEqual([
+      [-1, null, -1, null, null, null, null, null, 4, 4],
+      [-1, null, 2, null, null, null, null, null, null, null],
+      [-1, null, 2, null, null, null, null, null, null, null],
+      [-1, null, 2, null, null, null, null, null, null, null],
+      [-1, null, 2, null, null, null, null, null, null, null],
+      [null, null, 2, null, null, null, null, null, null, null],
+      [null, null, null, null, null, 3, null, null, null, null],
+      [null, null, null, null, null, -1, null, null, null, null],
+      [null, null, null, null, null, 3, null, null, null, null],
+      [null, 1, 1, 1, null, 3, null, null, null, null],
+    ]);
+  });
 });
