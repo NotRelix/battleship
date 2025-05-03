@@ -27,9 +27,22 @@ export class Gameboard {
     }
     if (this.board[x][y] !== null) {
       const shipIndex = this.board[x][y];
-      this.ships[shipIndex].hit();
+      const currShip = this.ships[shipIndex];
+      currShip.hit();
+      if (currShip.isSunk()) {
+        currShip.sunk = true;
+      }
     }
     this.board[x][y] = -1;
+  }
+
+  isAllSunk() {
+    for (let ship of this.ships) {
+      if (!ship.sunk) {
+        return false;
+      }
+    }
+    return true;
   }
 }
 

@@ -263,4 +263,25 @@ describe("Gameboard Class", () => {
       [null, 1, 1, 1, null, 3, null, null, null, null],
     ]);
   });
+
+  test("Check If All Ships Are Not Yet Sunk", () => {
+    expect(gameboard.isAllSunk()).toBe(false);
+  });
+
+  test("Check If All Ships Are Sunk", () => {
+    gameboard.receiveAttack(1, 2);
+    gameboard.receiveAttack(2, 2);
+    gameboard.receiveAttack(3, 2);
+    gameboard.receiveAttack(4, 2);
+    gameboard.receiveAttack(5, 2);
+    gameboard.receiveAttack(9, 1);
+    gameboard.receiveAttack(9, 2);
+    gameboard.receiveAttack(9, 3);
+    gameboard.receiveAttack(6, 5);
+    gameboard.receiveAttack(8, 5);
+    gameboard.receiveAttack(9, 5);
+    gameboard.receiveAttack(0, 8);
+    gameboard.receiveAttack(0, 9);
+    expect(gameboard.isAllSunk()).toBe(true);
+  });
 });
