@@ -1,3 +1,5 @@
+import { displayBoard } from "./modules/screen";
 import "./style.css";
 
-console.log("Test");
+displayBoard('player-one');
+displayBoard('player-two');
