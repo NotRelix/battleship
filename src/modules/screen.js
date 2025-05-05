@@ -40,4 +40,3 @@ export function isShip(ships, row, col) {
   }
   return false;
 }
-10084.9;
