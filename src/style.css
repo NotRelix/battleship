@@ -36,3 +36,7 @@
 .col:not(:first-child) {
   border-left: none;
 }
+
+.ship {
+  background-color: blue;
+}

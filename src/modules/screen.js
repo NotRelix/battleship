@@ -1,4 +1,4 @@
-export function displayBoard(name) {
+export function displayBoard(name, ships) {
   const game = document.querySelector(".game");
   const player = document.createElement("div");
   player.classList.add("player");
@@ -13,6 +13,31 @@ export function displayBoard(name) {
       const col = document.createElement("div");
       col.classList.add("col");
       row.appendChild(col);
+      if (isShip(ships, rowCount, colCount)) {
+        col.classList.add("ship");
+      }
     }
   }
 }
+
+export function isShip(ships, row, col) {
+  for (let ship of ships) {
+    if (
+      !ship.isVertical &&
+      col >= ship.x &&
+      col < ship.x + ship.length &&
+      ship.y === row
+    ) {
+      return true;
+    } else if (
+      ship.isVertical &&
+      row >= ship.y &&
+      row < ship.y + ship.length &&
+      ship.x === col
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+10084.9;
