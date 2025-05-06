@@ -4,14 +4,11 @@ import { populateBoard } from "./modules/populate";
 import { displayBoard } from "./modules/screen";
 import "./style.css";
 
-const playerOne = new Player("Reece");
+const playerOne = new Player("Reece is cool");
 const playerTwo = new Player("Computer");
-
-console.log(playerOne.gameboard);
-console.log(playerTwo.gameboard);
 
 populateBoard(playerOne, playerOneShips);
 populateBoard(playerTwo, playerTwoShips);
 
-displayBoard("player-one", playerOneShips);
-displayBoard("player-two", playerTwoShips);
+displayBoard(playerOne.kebabName, playerOneShips);
+displayBoard(playerTwo.kebabName, playerTwoShips);
