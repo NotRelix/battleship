@@ -40,3 +40,7 @@
 .ship {
   background-color: blue;
 }
+
+.hit {
+  background-color: red;
+}

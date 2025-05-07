@@ -12,6 +12,8 @@ export function displayBoard(name, ships) {
     for (let colCount = 0; colCount < 10; colCount++) {
       const col = document.createElement("div");
       col.classList.add("col");
+      col.setAttribute("data-x", rowCount);
+      col.setAttribute("data-y", colCount);
       row.appendChild(col);
       if (isShip(ships, rowCount, colCount)) {
         col.classList.add("ship");
@@ -39,4 +41,17 @@ export function isShip(ships, row, col) {
     }
   }
   return false;
+}
+
+export function attackCell(player, cell) {
+  if (!cell.classList.contains("col")) {
+    return;
+  }
+  if (cell.classList.contains(".hit")) {
+    return;
+  }
+  const xAxis = cell.getAttribute("data-x");
+  const yAxis = cell.getAttribute("data-y");
+  player.gameboard.receiveAttack(xAxis, yAxis);
+  cell.classList.add("hit");
 }
