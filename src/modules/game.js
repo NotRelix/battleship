@@ -1,15 +1,17 @@
 import { attackCell } from "./screen";
 
-function cellListener(player) {
-  document.addEventListener("click", (e) => {
-    const currentCell = e.target;
-    if (e.target.closest(`.${player.kebabName}`)) {
-      attackCell(player, currentCell);
-    }
-  })
-}
-
 export function game(playerOne, playerTwo) {
   let currentPlayer = playerOne;
-  cellListener(currentPlayer);
+  document.addEventListener("click", (e) => {
+    if (
+      !e.target.closest(`.${currentPlayer.kebabName}`) ||
+      !e.target.classList.contains("col") ||
+      e.target.classList.contains("hit")
+    ) {
+      return;
+    }
+    const currentCell = e.target;
+    attackCell(currentPlayer, currentCell);
+    currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
+  });
 }

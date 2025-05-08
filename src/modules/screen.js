@@ -44,12 +44,6 @@ export function isShip(ships, row, col) {
 }
 
 export function attackCell(player, cell) {
-  if (!cell.classList.contains("col")) {
-    return;
-  }
-  if (cell.classList.contains(".hit")) {
-    return;
-  }
   const xAxis = cell.getAttribute("data-x");
   const yAxis = cell.getAttribute("data-y");
   player.gameboard.receiveAttack(xAxis, yAxis);
