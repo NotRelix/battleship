@@ -6,7 +6,8 @@ export function game(playerOne, playerTwo) {
     if (
       !e.target.closest(`.${currentPlayer.kebabName}`) ||
       !e.target.classList.contains("col") ||
-      e.target.classList.contains("hit")
+      e.target.classList.contains("hit") ||
+      e.target.classList.contains("miss")
     ) {
       return;
     }
