@@ -1,3 +1,9 @@
+:root {
+  --grid-color: rgb(193, 193, 255);
+  --grid-outline: rgb(162, 162, 189);
+  --ship-body: rgb(229, 245, 255);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -14,31 +20,42 @@
 .player {
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--grid-outline);
 }
 
 .row {
   display: flex;
   justify-content: center;
-  border-top: 1px solid gray;
-  border-bottom: 1px solid gray;
+  border-top: 1px solid var(--grid-color);
+  border-bottom: 1px solid var(--grid-color);
 }
 
-.row:not(:first-child) {
+.row:not(:first-child),
+.row:first-child {
   border-top: none;
+}
+
+.row:last-child {
+  border-bottom: none;
 }
 
 .col {
   padding: 16px;
-  border-left: 1px solid gray;
-  border-right: 1px solid gray;
+  border-left: 1px solid var(--grid-color);
+  border-right: 1px solid var(--grid-color);
 }
 
-.col:not(:first-child) {
+.col:not(:first-child),
+.col:first-child {
   border-left: none;
 }
 
+.col:last-child {
+  border-right: none;
+}
+
 .ship {
-  background-color: blue;
+  background-color: var(--ship-body);
 }
 
 .hit {
