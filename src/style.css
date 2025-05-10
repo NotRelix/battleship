@@ -1,8 +1,10 @@
 :root {
   --grid-color: rgb(193, 193, 255);
   --grid-outline: rgb(162, 162, 189);
+  --cell-hover: rgb(242, 250, 255);
   --ship-body: rgb(229, 245, 255);
   --sunk-ship-bg: rgb(85, 166, 219);
+  --sunk-ship-hover: rgb(89, 171, 226);
 }
 
 * {
@@ -48,6 +50,10 @@
   border-right: 1px solid var(--grid-color);
 }
 
+.col:hover {
+  background-color: var(--cell-hover);
+}
+
 .col:not(:first-child),
 .col:first-child {
   border-left: none;
@@ -61,15 +67,25 @@
   background-color: var(--ship-body);
 }
 
+.hit {
+  position: relative;
+}
+
 .hit::after {
+  position: absolute;
   display: flex;
   align-items: center;
+  width: 100%;
   height: 100%;
   justify-content: center;
   content: "✕";
   background-color: var(--sunk-ship-bg);
   color: white;
   font-weight: bold;
+}
+
+.hit:hover::after {
+  background-color: var(--sunk-ship-hover);
 }
 
 .miss::after {
