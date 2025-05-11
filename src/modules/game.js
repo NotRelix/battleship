@@ -12,7 +12,9 @@ export function game(playerOne, playerTwo) {
       return;
     }
     const currentCell = e.target;
-    attackCell(currentPlayer, currentCell);
-    currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
+    const isSuccessfulAttack = attackCell(currentPlayer, currentCell);
+    if (!isSuccessfulAttack) {
+      currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
+    }
   });
 }

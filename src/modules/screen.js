@@ -47,7 +47,11 @@ export function attackCell(player, cell) {
   const xAxis = cell.getAttribute("data-x");
   const yAxis = cell.getAttribute("data-y");
   player.gameboard.receiveAttack(xAxis, yAxis);
-  cell.classList.contains("ship")
-    ? cell.classList.add("hit")
-    : cell.classList.add("miss");
+  if (cell.classList.contains("ship")) {
+    cell.classList.add("hit");
+    return true;
+  } else {
+    cell.classList.add("miss");
+    return false;
+  }
 }
