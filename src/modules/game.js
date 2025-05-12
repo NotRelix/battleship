@@ -1,18 +1,22 @@
 import { attackCell } from "./screen";
 
-function makeComputerMove(currentPlayer) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const randX = Math.floor(Math.random() * 10);
-      const randY = Math.floor(Math.random() * 10);
-      const currentCell = document.querySelector(
-        `[data-x="${randX}"][data-y="${randY}"]`,
-      );
-      const isSuccessfulAttack = attackCell(currentPlayer, currentCell);
-      console.log(isSuccessfulAttack);
-      resolve(true);
-    }, 2000);
-  });
+async function makeComputerMove(currentPlayer) {
+  const delay = () => new Promise((res) => setTimeout(res, 2000));
+  while (true) {
+    const randX = Math.floor(Math.random() * 10);
+    const randY = Math.floor(Math.random() * 10);
+    if (currentPlayer.gameboard.board[randX][randY] === -1) {
+      continue;
+    }
+    await delay();
+    const currentCell = document.querySelector(
+      `[data-x="${randX}"][data-y="${randY}"]`,
+    );
+    const isSuccessfulAttack = attackCell(currentPlayer, currentCell);
+    if (!isSuccessfulAttack) {
+      break;
+    }
+  }
 }
 
 export function game(playerOne, playerTwo) {
