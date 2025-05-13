@@ -15,11 +15,18 @@ async function makeRandomMove(currentPlayer, delay) {
   const currentCell = document.querySelector(
     `[data-x="${randX}"][data-y="${randY}"]`,
   );
+  const shipIndex = currentPlayer.gameboard.board[randX][randY];
   const isSuccessfulAttack = attackCell(currentPlayer, currentCell);
-  if (isSuccessfulAttack) {
-    return [randX, randY];
+  if (shipIndex !== null && shipIndex > -1) {
+    const currentShip = currentPlayer.gameboard.ships[shipIndex];
+    if (currentShip.isSunk()) {
+      return null;
+    }
   }
-  return null;
+  if (!isSuccessfulAttack) {
+    return null;
+  }
+  return [randX, randY];
 }
 
 function makeAdjacentHits(currentPlayer, lastHit) {
@@ -27,7 +34,7 @@ function makeAdjacentHits(currentPlayer, lastHit) {
 }
 
 export async function makeComputerMove(currentPlayer, lastHit) {
-  const delay = () => new Promise((res) => setTimeout(res, 2000));
+  const delay = () => new Promise((res) => setTimeout(res, 1));
   if (lastHit === null) {
     lastHit = await makeRandomMove(currentPlayer, delay);
   }
