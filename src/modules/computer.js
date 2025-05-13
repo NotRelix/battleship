@@ -4,6 +4,22 @@ function giveRandomNumber() {
   return Math.floor(Math.random() * 10);
 }
 
+function makeAttack(currentPlayer, x, y) {
+  const currentCell = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+  const shipIndex = currentPlayer.gameboard.board[x][y];
+  const isSuccessfulAttack = attackCell(currentPlayer, currentCell);
+  if (shipIndex !== null && shipIndex > -1) {
+    const currentShip = currentPlayer.gameboard.ships[shipIndex];
+    if (currentShip.isSunk()) {
+      return false;
+    }
+  }
+  if (!isSuccessfulAttack) {
+    return false;
+  }
+  return true;
+}
+
 async function makeRandomMove(currentPlayer, delay) {
   let randX = giveRandomNumber();
   let randY = giveRandomNumber();
@@ -12,35 +28,42 @@ async function makeRandomMove(currentPlayer, delay) {
     randY = giveRandomNumber();
   }
   await delay();
-  const currentCell = document.querySelector(
-    `[data-x="${randX}"][data-y="${randY}"]`,
-  );
-  const shipIndex = currentPlayer.gameboard.board[randX][randY];
-  const isSuccessfulAttack = attackCell(currentPlayer, currentCell);
-  if (shipIndex !== null && shipIndex > -1) {
-    const currentShip = currentPlayer.gameboard.ships[shipIndex];
-    if (currentShip.isSunk()) {
-      return null;
-    }
+  const attackStatus = makeAttack(currentPlayer, randX, randY);
+  if (attackStatus) {
+    return [randX, randY];
   }
-  if (!isSuccessfulAttack) {
-    return null;
-  }
-  return [randX, randY];
+  return null;
 }
 
-function makeAdjacentHits(currentPlayer, lastHit) {
-  // TODO: Make smarter hits for computer
+async function makeTopHit(currentPlayer, lastHit, delay) {
+  await delay();
+  const attackStatus = makeAttack(currentPlayer, lastHit[0], lastHit[1]);
+  return attackStatus;
+}
+
+async function makeAdjacentHits(currentPlayer, lastHit, delay) {
+  let topHitStatus = await makeTopHit(currentPlayer, lastHit, delay);
+  let modifiedLastHit = lastHit;
+  while (topHitStatus && modifiedLastHit[0] > 0) {
+    modifiedLastHit = [modifiedLastHit[0] - 1, modifiedLastHit[1]];
+    topHitStatus = await makeTopHit(currentPlayer, modifiedLastHit, delay);
+  }
+  const shipIndex =
+    currentPlayer.gameboard.originalBoard[lastHit[0]][lastHit[1]];
+  const currentShip = currentPlayer.gameboard.ships[shipIndex];
+  if (!currentShip.isSunk()) {
+    return lastHit;
+  }
+  return null;
 }
 
 export async function makeComputerMove(currentPlayer, lastHit) {
-  const delay = () => new Promise((res) => setTimeout(res, 1));
+  const delay = () => new Promise((res) => setTimeout(res, 500));
   if (lastHit === null) {
     lastHit = await makeRandomMove(currentPlayer, delay);
   }
   if (lastHit !== null) {
-    makeAdjacentHits(currentPlayer, lastHit);
+    lastHit = await makeAdjacentHits(currentPlayer, lastHit, delay);
   }
-  console.log(lastHit);
   return lastHit;
 }
