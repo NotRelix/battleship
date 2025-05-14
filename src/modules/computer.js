@@ -4,7 +4,8 @@ function giveRandomNumber() {
   return Math.floor(Math.random() * 10);
 }
 
-function makeAttack(currentPlayer, x, y) {
+async function makeAttack(currentPlayer, x, y, delay) {
+  await delay();
   const currentCell = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
   const shipIndex = currentPlayer.gameboard.board[x][y];
   const isSuccessfulAttack = attackCell(currentPlayer, currentCell);
@@ -27,8 +28,7 @@ async function makeRandomMove(currentPlayer, delay) {
     randX = giveRandomNumber();
     randY = giveRandomNumber();
   }
-  await delay();
-  const attackStatus = makeAttack(currentPlayer, randX, randY);
+  const attackStatus = makeAttack(currentPlayer, randX, randY, delay);
   if (attackStatus) {
     return [randX, randY];
   }
@@ -36,20 +36,30 @@ async function makeRandomMove(currentPlayer, delay) {
 }
 
 async function makeTopHit(currentPlayer, lastHit, delay) {
-  await delay();
-  const attackStatus = makeAttack(currentPlayer, lastHit[0], lastHit[1]);
-  return attackStatus;
+  let attackStatus = await makeAttack(
+    currentPlayer,
+    lastHit[0],
+    lastHit[1],
+    delay,
+  );
+  while (attackStatus && lastHit[0] > 0) {
+    lastHit = [lastHit[0] - 1, lastHit[1]];
+    attackStatus = await makeAttack(
+      currentPlayer,
+      lastHit[0],
+      lastHit[1],
+      delay,
+    );
+  }
 }
 
 async function makeAdjacentHits(currentPlayer, lastHit, delay) {
-  let topHitStatus = await makeTopHit(currentPlayer, lastHit, delay);
-  let modifiedLastHit = lastHit;
-  while (topHitStatus && modifiedLastHit[0] > 0) {
-    modifiedLastHit = [modifiedLastHit[0] - 1, modifiedLastHit[1]];
-    topHitStatus = await makeTopHit(currentPlayer, modifiedLastHit, delay);
-  }
+  await makeTopHit(currentPlayer, lastHit, delay);
   const shipIndex =
     currentPlayer.gameboard.originalBoard[lastHit[0]][lastHit[1]];
+  if (shipIndex === null || shipIndex < 0) {
+    return null;
+  }
   const currentShip = currentPlayer.gameboard.ships[shipIndex];
   if (!currentShip.isSunk()) {
     return lastHit;
