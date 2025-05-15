@@ -101,6 +101,28 @@ async function makeLeftHit(currentPlayer, lastHit, delay) {
   return attackStatus;
 }
 
+async function makeRightHit(currentPlayer, lastHit, delay) {
+  let attackStatus = await makeAttack(
+    currentPlayer,
+    lastHit[0],
+    lastHit[1],
+    delay,
+  );
+  while (attackStatus && lastHit[1] < 9) {
+    lastHit = [lastHit[0], lastHit[1] + 1];
+    if (currentPlayer.gameboard.board[lastHit[0]][lastHit[1]] === -1) {
+      return true;
+    }
+    attackStatus = await makeAttack(
+      currentPlayer,
+      lastHit[0],
+      lastHit[1],
+      delay,
+    );
+  }
+  return attackStatus;
+}
+
 async function makeAdjacentHits(currentPlayer, lastHit, delay) {
   const topStatus = await makeTopHit(currentPlayer, lastHit, delay);
   if (!topStatus) {
@@ -112,6 +134,10 @@ async function makeAdjacentHits(currentPlayer, lastHit, delay) {
   }
   const leftStatus = await makeLeftHit(currentPlayer, lastHit, delay);
   if (!leftStatus) {
+    return lastHit;
+  }
+  const rightStatus = await makeRightHit(currentPlayer, lastHit, delay);
+  if (!rightStatus) {
     return lastHit;
   }
   const shipIndex =
