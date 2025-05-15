@@ -3,6 +3,7 @@ import { Ship } from "./ship";
 export class Gameboard {
   constructor() {
     this.board = generateBoard();
+    this.originalBoard = generateBoard();
     this.ships = [];
   }
 
@@ -15,9 +16,13 @@ export class Gameboard {
     const currentShipIndex = this.ships.length;
     this.ships.push(ship);
     for (let i = 0; i < length; i++) {
-      isVertical
-        ? (this.board[x + i][y] = currentShipIndex)
-        : (this.board[x][y + i] = currentShipIndex);
+      if (isVertical) {
+        this.board[x + i][y] = currentShipIndex;
+        this.originalBoard[x + i][y] = currentShipIndex;
+      } else {
+        this.board[x][y + i] = currentShipIndex;
+        this.originalBoard[x][y + i] = currentShipIndex;
+      }
     }
   }
 
