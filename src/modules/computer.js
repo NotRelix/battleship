@@ -9,14 +9,14 @@ async function makeAttack(currentPlayer, x, y, delay) {
   const currentCell = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
   const shipIndex = currentPlayer.gameboard.board[x][y];
   const isSuccessfulAttack = attackCell(currentPlayer, currentCell);
+  if (!isSuccessfulAttack) {
+    return false;
+  }
   if (shipIndex !== null && shipIndex > -1) {
     const currentShip = currentPlayer.gameboard.ships[shipIndex];
     if (currentShip.isSunk()) {
       return false;
     }
-  }
-  if (!isSuccessfulAttack) {
-    return false;
   }
   return true;
 }
@@ -28,7 +28,7 @@ async function makeRandomMove(currentPlayer, delay) {
     randX = giveRandomNumber();
     randY = giveRandomNumber();
   }
-  const attackStatus = makeAttack(currentPlayer, randX, randY, delay);
+  const attackStatus = await makeAttack(currentPlayer, randX, randY, delay);
   if (attackStatus) {
     return [randX, randY];
   }
@@ -44,6 +44,9 @@ async function makeTopHit(currentPlayer, lastHit, delay) {
   );
   while (attackStatus && lastHit[0] > 0) {
     lastHit = [lastHit[0] - 1, lastHit[1]];
+    if (currentPlayer.gameboard.board[lastHit[0]][lastHit[1]] === -1) {
+      return true;
+    }
     attackStatus = await makeAttack(
       currentPlayer,
       lastHit[0],
@@ -51,10 +54,40 @@ async function makeTopHit(currentPlayer, lastHit, delay) {
       delay,
     );
   }
+  return attackStatus;
+}
+
+async function makeBottomHit(currentPlayer, lastHit, delay) {
+  let attackStatus = await makeAttack(
+    currentPlayer,
+    lastHit[0],
+    lastHit[1],
+    delay,
+  );
+  while (attackStatus && lastHit[0] < 9) {
+    lastHit = [lastHit[0] + 1, lastHit[1]];
+    if (currentPlayer.gameboard.board[lastHit[0]][lastHit[1]] === -1) {
+      return true;
+    }
+    attackStatus = await makeAttack(
+      currentPlayer,
+      lastHit[0],
+      lastHit[1],
+      delay,
+    );
+  }
+  return attackStatus;
 }
 
 async function makeAdjacentHits(currentPlayer, lastHit, delay) {
-  await makeTopHit(currentPlayer, lastHit, delay);
+  const topStatus = await makeTopHit(currentPlayer, lastHit, delay);
+  if (!topStatus) {
+    return lastHit;
+  }
+  const bottomStatus = await makeBottomHit(currentPlayer, lastHit, delay);
+  if (!bottomStatus) {
+    return lastHit;
+  }
   const shipIndex =
     currentPlayer.gameboard.originalBoard[lastHit[0]][lastHit[1]];
   if (shipIndex === null || shipIndex < 0) {
