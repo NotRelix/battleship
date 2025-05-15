@@ -1,7 +1,7 @@
 import { attackCell } from "./screen";
 
-function giveRandomNumber() {
-  return Math.floor(Math.random() * 10);
+function giveRandomNumber(num) {
+  return Math.floor(Math.random() * num);
 }
 
 async function makeAttack(currentPlayer, x, y, delay) {
@@ -27,12 +27,17 @@ async function makeRandomMove(currentPlayer, delay) {
   if (currentPlayer.gameboard.isAllSunk()) {
     return null;
   }
-  let randX = giveRandomNumber();
-  let randY = giveRandomNumber();
-  while (currentPlayer.gameboard.board[randX][randY] === -1) {
-    randX = giveRandomNumber();
-    randY = giveRandomNumber();
+  const availableCells = [];
+  for (let x = 0; x < 10; x++) {
+    for (let y = 0; y < 10; y++) {
+      if (currentPlayer.gameboard.board[x][y] !== -1) {
+        availableCells.push([x, y]);
+      }
+    }
   }
+  let randomNumber = giveRandomNumber(availableCells.length);
+  const randX = availableCells[randomNumber][0];
+  const randY = availableCells[randomNumber][1];
   const attackStatus = await makeAttack(currentPlayer, randX, randY, delay);
   if (attackStatus) {
     return [randX, randY];
@@ -173,10 +178,11 @@ async function makeAdjacentHits(currentPlayer, lastHit, delay) {
   if (!rightStatus) {
     return lastHit;
   }
+  return null;
 }
 
 export async function makeComputerMove(currentPlayer, lastHit) {
-  const delay = () => new Promise((res) => setTimeout(res, 50));
+  const delay = () => new Promise((res) => setTimeout(res, 1000));
   if (lastHit === null) {
     lastHit = await makeRandomMove(currentPlayer, delay);
     if (lastHit === false) {
@@ -195,6 +201,9 @@ export async function makeComputerMove(currentPlayer, lastHit) {
   if (lastHit !== null) {
     lastHit = await makeAdjacentHits(currentPlayer, lastHit, delay);
     while (lastHit === null || lastHit === false) {
+      if (currentPlayer.gameboard.isAllSunk()) {
+        break;
+      }
       lastHit = await makeRandomMove(currentPlayer, delay);
       if (lastHit === null) {
         break;
