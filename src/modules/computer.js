@@ -124,32 +124,43 @@ async function makeRightHit(currentPlayer, lastHit, delay) {
 }
 
 async function makeAdjacentHits(currentPlayer, lastHit, delay) {
-  const topStatus = await makeTopHit(currentPlayer, lastHit, delay);
-  if (!topStatus) {
-    return lastHit;
-  }
-  const bottomStatus = await makeBottomHit(currentPlayer, lastHit, delay);
-  if (!bottomStatus) {
-    return lastHit;
-  }
-  const leftStatus = await makeLeftHit(currentPlayer, lastHit, delay);
-  if (!leftStatus) {
-    return lastHit;
-  }
-  const rightStatus = await makeRightHit(currentPlayer, lastHit, delay);
-  if (!rightStatus) {
-    return lastHit;
-  }
   const shipIndex =
     currentPlayer.gameboard.originalBoard[lastHit[0]][lastHit[1]];
   if (shipIndex === null || shipIndex < 0) {
     return null;
   }
   const currentShip = currentPlayer.gameboard.ships[shipIndex];
-  if (!currentShip.isSunk()) {
+  if (currentShip.isSunk()) {
+    return null;
+  }
+  const topStatus = await makeTopHit(currentPlayer, lastHit, delay);
+  if (currentShip.isSunk()) {
+    return null;
+  }
+  if (!topStatus) {
     return lastHit;
   }
-  return null;
+  const bottomStatus = await makeBottomHit(currentPlayer, lastHit, delay);
+  if (currentShip.isSunk()) {
+    return null;
+  }
+  if (!bottomStatus) {
+    return lastHit;
+  }
+  const leftStatus = await makeLeftHit(currentPlayer, lastHit, delay);
+  if (currentShip.isSunk()) {
+    return null;
+  }
+  if (!leftStatus) {
+    return lastHit;
+  }
+  const rightStatus = await makeRightHit(currentPlayer, lastHit, delay);
+  if (currentShip.isSunk()) {
+    return null;
+  }
+  if (!rightStatus) {
+    return lastHit;
+  }
 }
 
 export async function makeComputerMove(currentPlayer, lastHit) {
@@ -159,6 +170,15 @@ export async function makeComputerMove(currentPlayer, lastHit) {
   }
   if (lastHit !== null) {
     lastHit = await makeAdjacentHits(currentPlayer, lastHit, delay);
+    while (lastHit === null) {
+      lastHit = await makeRandomMove(currentPlayer, delay);
+      if (lastHit === null) {
+        break;
+      }
+      if (lastHit !== null) {
+        lastHit = await makeAdjacentHits(currentPlayer, lastHit, delay);
+      }
+    }
   }
   return lastHit;
 }
