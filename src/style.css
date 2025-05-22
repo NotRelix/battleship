@@ -3,6 +3,7 @@
   --grid-outline: rgb(162, 162, 189);
   --cell-hover: rgb(242, 250, 255);
   --ship-body: rgb(229, 245, 255);
+  --ship-border: rgb(0, 99, 165);
   --sunk-ship-bg: rgb(85, 166, 219);
   --sunk-ship-hover: rgb(89, 171, 226);
 }
@@ -61,6 +62,12 @@
 
 .col:last-child {
   border-right: none;
+}
+
+.ship-container {
+  display: flex;
+  width: fit-content;
+  border: 2px solid var(--ship-border);
 }
 
 .ship {
