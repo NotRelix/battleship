@@ -67,6 +67,7 @@
   display: flex;
   width: fit-content;
   border: 2px solid var(--ship-border);
+  cursor: move;
 }
 
 .ship-container.vertical {

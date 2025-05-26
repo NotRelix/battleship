@@ -1,3 +1,5 @@
+import { handleDragOver } from "./draggable-ships";
+
 export function displayBoard(name, ships) {
   const game = document.querySelector(".game");
   const player = document.createElement("div");
@@ -18,6 +20,7 @@ export function displayBoard(name, ships) {
       if (isShip(ships, rowCount, colCount)) {
         col.classList.add("ship");
       }
+      col.addEventListener("dragover", handleDragOver);
     }
   }
 }

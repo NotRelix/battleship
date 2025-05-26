@@ -1,4 +1,5 @@
 import { makeComputerMove } from "./computer";
+import { handleDragEnd, handleDragStart } from "./draggable-ships";
 import { attackCell } from "./screen";
 
 export function game(playerOne, playerTwo) {
@@ -23,4 +24,9 @@ export function game(playerOne, playerTwo) {
       currentPlayer = playerTwo;
     }
   });
+
+  
+
+  document.addEventListener("dragstart", handleDragStart);
+  document.addEventListener("dragend", handleDragEnd);
 }
