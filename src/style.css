@@ -80,6 +80,11 @@
   background-color: var(--ship-body);
 }
 
+.over {
+  opacity: 0.4;
+  background-color: var(--ship-border);
+}
+
 .ship:not(:first-child),
 .ship:first-child {
   border-left: none;
@@ -92,7 +97,7 @@
 
 .vertical .ship:not(:first-child),
 .vertical .ship:first-child {
-  box-sizing: content-box;
+  /* box-sizing: border-box; */
   border: none;
   border-bottom: 1px solid var(--grid-outline);
 }

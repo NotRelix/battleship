@@ -1,4 +1,4 @@
-import { handleDragOver } from "./draggable-ships";
+import { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } from "./draggable-ships";
 
 export function displayBoard(name, ships) {
   const game = document.querySelector(".game");
@@ -21,6 +21,9 @@ export function displayBoard(name, ships) {
         col.classList.add("ship");
       }
       col.addEventListener("dragover", handleDragOver);
+      col.addEventListener("dragenter", handleDragEnter);
+      col.addEventListener("dragleave", handleDragLeave);
+      col.addEventListener("drop", handleDrop);
     }
   }
 }
